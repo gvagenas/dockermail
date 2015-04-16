@@ -46,8 +46,8 @@ RUN apt-get install -y --force-yes dovecot-imapd
 
 # postfix configuration
 RUN echo "mail.docker.container" > /etc/mailname
-ADD ./postfix.main.cf /etc/postfix/main.cf
-ADD ./postfix.master.cf.append /etc/postfix/master-additional.cf
+ADD .dovecot/postfix.main.cf /etc/postfix/main.cf
+ADD .dovecot/postfix.master.cf.append /etc/postfix/master-additional.cf
 #### *** Added to entrypoint
 RUN cat /etc/postfix/master-additional.cf >> /etc/postfix/master.cf
 
@@ -77,12 +77,12 @@ RUN chown -R vmail:vmail /srv/vmail
 RUN chmod u+w /srv/vmail
 
 # dovecot configuration
-ADD ./dovecot.mail /etc/dovecot/conf.d/10-mail.conf
-ADD ./dovecot.ssl /etc/dovecot/conf.d/10-ssl.conf
-ADD ./dovecot.auth /etc/dovecot/conf.d/10-auth.conf
-ADD ./dovecot.master /etc/dovecot/conf.d/10-master.conf
-ADD ./dovecot.lda /etc/dovecot/conf.d/15-lda.conf
-ADD ./dovecot.imap /etc/dovecot/conf.d/20-imap.conf
+ADD .dovecot/dovecot.mail /etc/dovecot/conf.d/10-mail.conf
+ADD .dovecot/dovecot.ssl /etc/dovecot/conf.d/10-ssl.conf
+ADD .dovecot/dovecot.auth /etc/dovecot/conf.d/10-auth.conf
+ADD .dovecot/dovecot.master /etc/dovecot/conf.d/10-master.conf
+ADD .dovecot/dovecot.lda /etc/dovecot/conf.d/15-lda.conf
+ADD .dovecot/dovecot.imap /etc/dovecot/conf.d/20-imap.conf
 # add verbose logging
 #ADD ./internal/dovecot.logging /etc/dovecot/conf.d/10-logging.conf
 
@@ -102,7 +102,7 @@ EXPOSE 587
 # http://www.synology-wiki.de/index.php/Zusaetzliche_Ports_fuer_Postfix
 
 #Copy the entrypoint file
-ADD ./entrypoint.sh /entrypoint.sh
+ADD .dovecot/entrypoint.sh /entrypoint.sh
 
 # start necessary services for operation (dovecot -F starts dovecot in the foreground to prevent container exit)
 ENTRYPOINT /bin/bash /entrypoint.sh
