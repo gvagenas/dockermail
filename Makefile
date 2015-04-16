@@ -2,14 +2,14 @@ all: mail-base dovecot rainloop owncloud
 
 .PHONY: mail-base dovecot rainloop owncloud run-dovecot run-rainloop run-owncloud
 
-mail-base: 
-	cd mail-base; docker build --no-cache -t mail-base .
+mail-base:
+	cd mail-base; docker build --no-cache -t mail-base-gvag .
 
 dovecot: mail-base
-	cd dovecot; docker build -t dovecot:2.1.7 .
+	cd dovecot; docker build -t dovecot:2.1.7-gvag .
 
 rainloop: dovecot
-	cd rainloop; docker build -t rainloop:1.6.9 .
+	cd rainloop; docker build -t rainloop:1.6.9-gvag .
 
 mailpile: dovecot
 	cd mailpile; docker build -t mailpile:latest .
@@ -27,6 +27,6 @@ run-mailpile:
 	docker run -d -p 127.0.0.1:33411:33411 mailpile:latest
 
 run-owncloud:
-	docker run -d -p 127.0.0.1:33200:80 -v /srv/owncloud:/var/www/owncloud/data owncloud:7.0.2 
+	docker run -d -p 127.0.0.1:33200:80 -v /srv/owncloud:/var/www/owncloud/data owncloud:7.0.2
 
 run-all: run-dovecot run-rainloop run-owncloud
