@@ -6,10 +6,10 @@ mail-base:
 	cd mail-base; docker build --no-cache -t mail-base-gvag .
 
 dovecot: mail-base
-	cd dovecot; docker build -t dovecot-gvag:2.1.7 .
+	cd dovecot; docker build -t dovecot-gvag: .
 
 rainloop: dovecot
-	cd rainloop; docker build -t rainloop-gvag:1.6.9 .
+	cd rainloop; docker build -t rainloop-gvag: .
 
 mailpile: dovecot
 	cd mailpile; docker build -t mailpile:latest .
