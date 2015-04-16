@@ -23,7 +23,9 @@ RUN cat /etc/postfix/master-additional.cf >> /etc/postfix/master.cf
 #ADD ./aliases /etc/postfix/virtual
 #ADD ./domains /etc/postfix/virtual-mailbox-domains
 RUN cp /aliases /etc/postfix/virtual
+RUN rm /aliases
 RUN cp /domains /etc/postfix/virtual-mailbox-domains
+RUN rm /domains
 
 #### *** Added to entrypoint
 # todo: this could probably be done in one line
@@ -54,6 +56,7 @@ ADD ./dovecot.imap /etc/dovecot/conf.d/20-imap.conf
 
 # Add password file
 RUN cp /passwords /etc/dovecot/passwd
+RUN rm /passwords
 
 # i'm not sure what expose actually does, so its mainly here for documentation
 # smtp port for incoming mail
