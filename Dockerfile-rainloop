@@ -36,6 +36,7 @@ ADD ./config/domains /domains
 RUN apt-get install -y --force-yes wget
 RUN apt-get install -y --force-yes unzip
 
+RUN mkdir /var/www
 RUN cd /var/www
 RUN wget -O rainloop.zip http://repository.rainloop.net/v2/webmail/rainloop-latest.zip
 RUN unzip rainloop.zip
