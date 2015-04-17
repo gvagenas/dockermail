@@ -1,0 +1,64 @@
+FROM ubuntu:14.04
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN echo 'deb http://archive.ubuntu.com/ubuntu/ trusty main' | tee /etc/apt/sources.list
+RUN echo 'deb-src http://archive.ubuntu.com/ubuntu/ trusty main' | tee -a /etc/apt/sources.list
+RUN echo 'deb http://archive.ubuntu.com/ubuntu/ trusty-updates main' | tee -a /etc/apt/sources.list
+RUN echo 'deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates main' | tee -a /etc/apt/sources.list
+RUN echo 'deb http://archive.ubuntu.com/ubuntu/ trusty universe' | tee -a /etc/apt/sources.list
+RUN echo 'deb-src http://archive.ubuntu.com/ubuntu/ trusty universe' | tee -a /etc/apt/sources.list
+RUN echo 'deb http://archive.ubuntu.com/ubuntu/ trusty-updates universe' | tee -a /etc/apt/sources.list
+RUN echo 'deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates universe' | tee -a /etc/apt/sources.list
+RUN echo 'deb http://archive.ubuntu.com/ubuntu/ trusty multiverse' | tee -a /etc/apt/sources.list
+RUN echo 'deb-src http://archive.ubuntu.com/ubuntu/ trusty multiverse' | tee -a /etc/apt/sources.list
+RUN echo 'deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse' | tee -a /etc/apt/sources.list
+RUN echo 'deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse' | tee -a /etc/apt/sources.list
+RUN echo 'deb http://archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse' | tee -a /etc/apt/sources.list
+RUN echo 'deb-src http://archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse' | tee -a /etc/apt/sources.list
+RUN echo 'deb http://security.ubuntu.com/ubuntu trusty-security main' | tee -a /etc/apt/sources.list
+RUN echo 'deb-src http://security.ubuntu.com/ubuntu trusty-security main' | tee -a /etc/apt/sources.list
+RUN echo 'deb http://security.ubuntu.com/ubuntu trusty-security universe' | tee -a /etc/apt/sources.list
+RUN echo 'deb-src http://security.ubuntu.com/ubuntu trusty-security universe' | tee -a /etc/apt/sources.list
+RUN echo 'deb http://security.ubuntu.com/ubuntu trusty-security multiverse' | tee -a /etc/apt/sources.list
+RUN echo 'deb-src http://security.ubuntu.com/ubuntu trusty-security multiverse' | tee -a /etc/apt/sources.list
+
+RUN locale-gen en_US en_US.UTF-8 && dpkg-reconfigure locales
+
+RUN apt-get update
+
+RUN apt-get -y -q autoclean
+RUN apt-get -y -q autoremove
+RUN apt-get clean
+
+ADD ./config/domains /domains
+
+RUN apt-get install -y --force-yes wget
+RUN apt-get install -y --force-yes unzip
+
+RUN cd /var/www
+RUN wget -O rainloop.zip http://repository.rainloop.net/v2/webmail/rainloop-latest.zip
+RUN unzip rainloop.zip
+RUN rm rainloop.zip
+
+#RUN apt-get install -y --force-yes git
+#RUN git clone -b 1.6.9 --depth 1 https://github.com/RainLoop/rainloop-webmail.git /var/www
+
+RUN apt-get install -y --force-yes apache2 php5 libapache2-mod-php5 php5-curl php5-json
+
+# Force initialization of data directories triggered at first program start
+RUN php /var/www/index.php
+
+RUN chown -R www-data:www-data /var/www
+
+ADD ./rainloop/create_config.sh /create_config.sh
+
+RUN /bin/bash /create_config.sh
+RUN rm /domains
+RUN rm /create_config.sh
+
+RUN cp -r /var/www/rainloop /var/www/html
+RUN cp -r /var/www/data /var/www/html
+RUN cp /var/www/index.php /var/www/html/index.php
+
+ENTRYPOINT apachectl -DFOREGROUND
