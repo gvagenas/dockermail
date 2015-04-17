@@ -10,8 +10,11 @@ dovecot:
 	#cd dovecot; docker build -t dovecot-gvag: .
 	docker build -f Dockerfile-dovecot -t dovecot-gvag: .
 
-rainloop: dovecot
-	cd rainloop; docker build -t rainloop-gvag: .
+#rainloop: dovecot
+#	cd rainloop; docker build -t rainloop-gvag: .
+
+rainloop:
+	docker build -f Dockerfile-rainloop -t rainloop-gvag: .
 
 mailpile: dovecot
 	cd mailpile; docker build -t mailpile:latest .
