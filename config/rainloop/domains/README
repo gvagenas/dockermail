@@ -1,1 +1,13 @@
 Create an ini file for each of your domains such as example.org.ini
+
+filename: example.org.ini
+
+imap_host = "example.org" 
+imap_port = 143
+imap_secure = "TLS"
+smtp_host = "example.org"
+smtp_port = 587
+smtp_secure = "TLS"
+smtp_auth = On
+
+
