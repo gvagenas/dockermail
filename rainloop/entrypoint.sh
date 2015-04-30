@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ENTRYPOINT apachectl -DFOREGROUND
+apachectl -DFOREGROUND

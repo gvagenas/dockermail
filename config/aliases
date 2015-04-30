@@ -1,2 +1,6 @@
-admin@example.org	admin@example.org
-@example.org 	catch-all@example.org
+admin@thestackcartel.net	admin@thestackcartel.net
+admin@thestackcartel.com	admin@thestackcartel.com
+admin@thestackcartel.org	admin@thestackcartel.org
+admin@enterpriserealm.org	admin@enterpriserealm.org
+admin@enterpriserealm.com	admin@enterpriserealm.com
+#@example.org 	catch-all@example.org
